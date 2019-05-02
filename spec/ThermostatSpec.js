@@ -10,7 +10,7 @@ describe('Thermostat', function() {
   });
 
   it('Thermostat starts with Power Saving on by default', function() {
-    expect(thermostat._powerSaving).toBe('On');
+    expect(thermostat._powerSaving).toBe(true);
   });
 
   describe('getTemp', function() {
@@ -19,40 +19,55 @@ describe('Thermostat', function() {
     });
   });
 
+  describe('getPowerSaving', function() {
+    it('returns the power saving setting', function() {
+      expect(thermostat.getPowerSaving()).toEqual(true);
+    });
+  });
+
   describe('increaseTemp', function() {
-    it('increase temperature by provided value', function() {
-      thermostat.increaseTemp(2);
-      expect(thermostat.getTemp()).toEqual(22);
+    it('increase temperature by 1', function() {
+      thermostat.increaseTemp();
+      expect(thermostat.getTemp()).toEqual(21);
     });
     it('cannot increase temperature above 25 if power saving on', function() {
-      thermostat.setPowerSaving('On');
+      thermostat.setPowerSavingOn();
       var error = 'Maximum temperature is 25 with power saving on';
-      expect(function() { thermostat.increaseTemp(6) }).toThrow(error);
-      expect(function() { thermostat.increaseTemp(5) }).not.toThrow(error);
+      for (var i = 0; i < 4; i++) {
+        thermostat.increaseTemp();
+      };
+      expect(function() { thermostat.increaseTemp() }).not.toThrow(error);
+      expect(function() { thermostat.increaseTemp() }).toThrow(error);
     });
     it('cannot increase temperature above 32 if power saving off', function() {
-      thermostat.setPowerSaving('Off');
+      thermostat.setPowerSavingOff();
       var error = 'Maximum temperature is 32 with power saving off';
-      expect(function() { thermostat.increaseTemp(13) }).toThrow(error);
-      expect(function() { thermostat.increaseTemp(12) }).not.toThrow(error);
+      for (var i = 0; i < 11; i++) {
+        thermostat.increaseTemp();
+      }
+      expect(function() { thermostat.increaseTemp() }).not.toThrow(error);
+      expect(function() { thermostat.increaseTemp() }).toThrow(error);
     });
   });
 
   describe('decreaseTemp', function() {
-    it('decrease temperature by provided value', function() {
-      thermostat.decreaseTemp(10);
-      expect(thermostat.getTemp()).toEqual(10);
+    it('decrease temperature by 1', function() {
+      thermostat.decreaseTemp();
+      expect(thermostat.getTemp()).toEqual(19);
     });
     it('cannot decrease temperature below minimum of 10', function() {
       var error = 'Minimum temperature is 10';
-      expect(function() { thermostat.decreaseTemp(11) }).toThrow(error);
-      expect(function() { thermostat.decreaseTemp(10) }).not.toThrow(error);
+      for (var i = 0; i < 9; i++) {
+        thermostat.decreaseTemp();
+      }
+      expect(function() { thermostat.decreaseTemp() }).not.toThrow(error);
+      expect(function() { thermostat.decreaseTemp() }).toThrow(error);
     });
   });
 
   describe('resetTemp', function() {
     it('resets the temperature to 20', function() {
-      thermostat.decreaseTemp(5);
+      thermostat.decreaseTemp();
       thermostat.resetTemp();
       expect(thermostat.getTemp()).toEqual(20);
     });
@@ -60,22 +75,28 @@ describe('Thermostat', function() {
 
   describe('currentEnergyUsage', function() {
     it('returns low-usage if below 18', function() {
-      thermostat.decreaseTemp(3);
-      expect(thermostat.currentEnergyUsage()).toBe('low-usage');
-      thermostat.increaseTemp(1);
+      for (var i = 0; i < 2; i++) {
+        thermostat.decreaseTemp();
+      }
       expect(thermostat.currentEnergyUsage()).not.toBe('low-usage');
+      thermostat.decreaseTemp();
+      expect(thermostat.currentEnergyUsage()).toBe('low-usage');
     });
     it('returns medium-usage if below 25', function() {
-      thermostat.increaseTemp(4);
+      for (var i = 0; i < 4; i++) {
+        thermostat.increaseTemp();
+      }
       expect(thermostat.currentEnergyUsage()).toBe('medium-usage');
-      thermostat.increaseTemp(1);
+      thermostat.increaseTemp();
       expect(thermostat.currentEnergyUsage()).not.toBe('medium-usage');
     });
     it('returns high-usage if 25 or above', function() {
-      thermostat.increaseTemp(5);
-      expect(thermostat.currentEnergyUsage()).toBe('high-usage');
-      thermostat.decreaseTemp(1);
+      for (var i = 0; i < 4; i++) {
+        thermostat.increaseTemp();
+      }
       expect(thermostat.currentEnergyUsage()).not.toBe('high-usage');
+      thermostat.increaseTemp();
+      expect(thermostat.currentEnergyUsage()).toBe('high-usage');
     });
   });
 });
