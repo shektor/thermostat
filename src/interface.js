@@ -1,13 +1,19 @@
 $( document ).ready(function() {
 
   var thermostat = new Thermostat();
-  $('#temperature').text(thermostat.getTemp());
+
+  function updateTemp() {
+    $('#temperature').text(thermostat.getTemp());
+    $('#temperature').attr('class', thermostat.currentEnergyUsage());
+  };
+
+  updateTemp();
   $('#power-saving-status').text(thermostat.getPowerSaving());
   // document.getElementById("temperature").innerHTML = thermostat.getTemp();
 
   $('#temperature-up').click(function() {
     thermostat.increaseTemp();
-    $('#temperature').text(thermostat.getTemp());
+    updateTemp();
   });
   // document.getElementById("temperature-up").addEventListener("click", function() {
   //   thermostat.increaseTemp();
@@ -16,12 +22,12 @@ $( document ).ready(function() {
 
   $('#temperature-down').click(function() {
     thermostat.decreaseTemp();
-    $('#temperature').text(thermostat.getTemp());
+    updateTemp();
   });
 
   $('#temperature-reset').click(function() {
     thermostat.resetTemp();
-    $('#temperature').text(thermostat.getTemp());
+    updateTemp();
   });
 
   $('#powersaving-on').click(function() {

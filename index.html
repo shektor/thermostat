@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      a.test {
-        font-weight: bold;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="public/normalize.css">
+    <link rel="stylesheet" href="public/skeleton.css">
+    <link rel="stylesheet" href="public/styling.css">
     <title>Thermostat</title>
   </head>
   <body>
+    <div class="container">
     <section>
+      <h3>Thermostat</h3>
       <h1 id="temperature"></h1>
-      <p>
-        <button id="temperature-up">+</button>
-        <button id="temperature-down">-</button>
-        <button id="temperature-reset">reset</button>
-        power saving mode is <span id="power-saving-status">on</span>
-        <button id="powersaving-on">PSM on</button>
-        <button id="powersaving-off">PSM off</button>
-      </p>
+      <div class="row">
+      <button class="button-primary" id="temperature-up">+</button>
+      <button class="button-primary" id="temperature-down">-</button>
+      </div>
+      <div class="row">
+      <button id="temperature-reset">reset</button>
+      </div>
+      <div class="row">
+      <button id="powersaving-on">PSM on</button>
+      <button id="powersaving-off">PSM off</button>
+      </div>
+      <div class="row">
+      Power saving mode is <span id="power-saving-status">on</span>
+      </div>
     </section>
     <script src="lib/jquery-3.4.1.min.js"></script>
     <script src="src/thermostat.js"></script>
     <script src="src/interface.js"></script>
+    </div>
   </body>
 </html>
